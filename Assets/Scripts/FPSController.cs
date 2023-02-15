@@ -57,9 +57,11 @@ public class FPSController : MonoBehaviour
         }
         controller.Move(velocity * Time.deltaTime);
 
+        /*
         if (Input.GetKeyDown("escape"))
         {
             Application.Quit();
         }
+        */
     }
 }
