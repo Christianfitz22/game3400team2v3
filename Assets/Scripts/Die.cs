@@ -13,6 +13,15 @@ public class Die : MonoBehaviour
 
     private Rigidbody rb;
 
+    /*
+    1 = 0 Y 0
+    2 = 0 Y -90
+    3 = 90 0 Z
+    4 = -90 0 Z
+    5 =  0 Y 90
+    6 = -180 Y 0
+    */
+
     // Start is called before the first frame update
     void Start()
     {
