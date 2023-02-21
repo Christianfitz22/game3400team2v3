@@ -77,8 +77,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   throwPos: {x: 0, y: 0.25, z: 0.5}
-  throwForce: 2.5
-  throwRadius: 30
+  throwForce: 2
+  throwRadius: 20
 --- !u!1 &4002866492025391359
 GameObject:
   m_ObjectHideFlags: 0
