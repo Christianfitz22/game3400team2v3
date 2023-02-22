@@ -31,6 +31,13 @@ public class DiceController : MonoBehaviour
 
     private bool enemyDeciding = false;
 
+    // sound
+    public AudioSource audioSource;
+    public AudioClip clickSound;
+    public AudioClip voiceSound;
+    public AudioClip rollSound;
+    public AudioClip winSound;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -152,6 +159,7 @@ public class DiceController : MonoBehaviour
             announcer.announce("No more chips... you lose this round.");
             dialogue.announce("Haha, yes! A win! Finally! This is the best luck I’ve been having all day. Say, while my luck is up and your luck is down... care for a rematch?");
             foldMove();
+            audioSource.PlayOneShot(winSound, 0.5f);
         }
         else if (enemyChips == 0)
         {
@@ -159,6 +167,7 @@ public class DiceController : MonoBehaviour
             // run enemy loss dialogue
             announcer.announce("You have all the chips, so you win!");
             dialogue.announce("Hmph, seems like you've got a bad case of beginner's luck. Ah well, a deal’s a deal. Maybe outrunning the space mafia will give me more time to gamble later...");
+            audioSource.PlayOneShot(winSound, 0.5f);
         }
         else if ((targetNumber > 13 && pot < 2))
         {
@@ -229,6 +238,7 @@ public class DiceController : MonoBehaviour
         {
             turnIndicator.transform.localScale = new Vector3(baseScale.x, baseScale.y, -Mathf.Abs(baseScale.z));
         }
+        audioSource.PlayOneShot(clickSound, 0.5f);
     }
 
     public void beginRoll()
@@ -243,6 +253,7 @@ public class DiceController : MonoBehaviour
         }
         waitingForRoll = true;
         elapsedTime = 1.5f;
+        audioSource.PlayOneShot(rollSound, 0.5f);
     }
 
     public void rollAll(Vector3 position, int direction)

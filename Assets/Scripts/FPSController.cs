@@ -47,6 +47,7 @@ public class FPSController : MonoBehaviour
         var movement = transform.right * xMove + transform.forward * zMove;
         controller.Move(movement * (playerSpeed * Time.deltaTime));
 
+        /*
         if (Input.GetButtonDown("Jump") && grounded)
         {
             velocity.y = Mathf.Sqrt((jumpHeight * -3f * gravity));
@@ -55,6 +56,8 @@ public class FPSController : MonoBehaviour
         {
             velocity.y += gravity * Time.deltaTime;
         }
+        */
+        velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
 
         if (Input.GetKeyDown("escape"))
