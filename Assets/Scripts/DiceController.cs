@@ -26,6 +26,9 @@ public class DiceController : MonoBehaviour
 
     public TMP_Text display;
     public GameObject turnIndicator;
+    public Announcer announcer;
+
+    private bool enemyDeciding = false;
 
     // Start is called before the first frame update
     void Start()
@@ -35,6 +38,8 @@ public class DiceController : MonoBehaviour
         pot = 0;
         targetNumber = 0;
         displayScore();
+        playerPoint += transform.position;
+        enemyPoint += transform.position;
     }
 
     // Update is called once per frame
@@ -48,15 +53,15 @@ public class DiceController : MonoBehaviour
                 int result = getSum();
                 if (result == -1)
                 {
-                    Debug.Log("bad throw");
+                    announcer.announce("Bad throw! Rerolling...");
                     beginRoll();
                 }
                 else
                 {
-                    Debug.Log(result);
                     waitingForRoll = false;
                     if (result >= targetNumber)
                     {
+                        announcer.announce("Roll of " + result + " matches target. New target set!");
                         targetNumber = result;
                     }
                     else
@@ -65,10 +70,12 @@ public class DiceController : MonoBehaviour
                         if (playerTurn)
                         {
                             enemyChips += pot;
+                            announcer.announce("Roll of " + result + " less than target. You lose the pot!");
                         }
                         else
                         {
                             playerChips += pot;
+                            announcer.announce("Roll of " + result + " less than target. You win the pot!");
                         }
                         pot = 0;
                     }
@@ -82,36 +89,33 @@ public class DiceController : MonoBehaviour
             // enemy AI
             if (!playerTurn)
             {
-                if (playerChips == 0 && pot == 0)
+                if (!enemyDeciding)
                 {
-                    // run player loss dialogue
-                    Debug.Log("player loss");
-                    foldMove();
-                }
-                else if (enemyChips == 0)
-                {
-                    foldMove();
-                    // run enemy loss dialogue
-                    Debug.Log("enemy loss");
-                }
-                else if ((targetNumber > 13 && pot < 2))
-                {
-                    foldMove();
+                    enemyDeciding = true;
+                    elapsedTime = 3f;
                 }
                 else
                 {
-                    raiseMove();
+                    elapsedTime -= Time.deltaTime;
+                    if (elapsedTime < 0f)
+                    {
+                        enemyDeciding = false;
+                        enemyMakeMove();
+                    }
                 }
             }
-
-            // player options
-            if (Input.GetKeyDown(KeyCode.R))
+            else
             {
-                raiseMove();
-            }
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                foldMove();
+                // player options
+                if (Input.GetKeyDown(KeyCode.R))
+                {
+                    raiseMove();
+                }
+                if (Input.GetKeyDown(KeyCode.C))
+                {
+                    foldMove();
+                    announcer.announce("You fold... get 'em next time.");
+                }
             }
         }
 
@@ -128,6 +132,32 @@ public class DiceController : MonoBehaviour
         }
     }
 
+    public void enemyMakeMove()
+    {
+        if (playerChips == 0 && pot == 0)
+        {
+            // run player loss dialogue
+            announcer.announce("No more chips... you lose this round.");
+            foldMove();
+        }
+        else if (enemyChips == 0)
+        {
+            foldMove();
+            // run enemy loss dialogue
+            announcer.announce("You have all the chips, so you win!");
+        }
+        else if ((targetNumber > 13 && pot < 2))
+        {
+            foldMove();
+            announcer.announce("They fold, the pot is yours!");
+        }
+        else
+        {
+            raiseMove();
+            announcer.announce("They raise!");
+        }
+    }
+
     public void raiseMove()
     {
         if (playerTurn)
@@ -138,6 +168,7 @@ public class DiceController : MonoBehaviour
                 playerChips -= 1;
                 displayScore();
                 beginRoll();
+                announcer.announce("You raise!");
             }
         }
         else
