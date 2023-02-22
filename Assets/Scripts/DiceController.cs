@@ -27,6 +27,7 @@ public class DiceController : MonoBehaviour
     public TMP_Text display;
     public GameObject turnIndicator;
     public Announcer announcer;
+    public Announcer dialogue;
 
     private bool enemyDeciding = false;
 
@@ -62,6 +63,14 @@ public class DiceController : MonoBehaviour
                     if (result >= targetNumber)
                     {
                         announcer.announce("Roll of " + result + " matches target. New target set!");
+                        if (playerTurn)
+                        {
+                            dialogue.announce("Hmm... alright...");
+                        }
+                        else
+                        {
+                            dialogue.announce("Hah! Take that!");
+                        }
                         targetNumber = result;
                     }
                     else
@@ -71,11 +80,13 @@ public class DiceController : MonoBehaviour
                         {
                             enemyChips += pot;
                             announcer.announce("Roll of " + result + " less than target. You lose the pot!");
+                            dialogue.announce("Hey, look at that! A win for me!");
                         }
                         else
                         {
                             playerChips += pot;
                             announcer.announce("Roll of " + result + " less than target. You win the pot!");
+                            dialogue.announce("Damn... I was sure I had you that time...");
                         }
                         pot = 0;
                     }
@@ -115,6 +126,7 @@ public class DiceController : MonoBehaviour
                 {
                     foldMove();
                     announcer.announce("You fold... get 'em next time.");
+                    dialogue.announce("Didn't want to risk it? More chips for me then...");
                 }
             }
         }
@@ -138,6 +150,7 @@ public class DiceController : MonoBehaviour
         {
             // run player loss dialogue
             announcer.announce("No more chips... you lose this round.");
+            dialogue.announce("Haha, yes! A win! Finally! This is the best luck I’ve been having all day. Say, while my luck is up and your luck is down... care for a rematch?");
             foldMove();
         }
         else if (enemyChips == 0)
@@ -145,16 +158,19 @@ public class DiceController : MonoBehaviour
             foldMove();
             // run enemy loss dialogue
             announcer.announce("You have all the chips, so you win!");
+            dialogue.announce("Hmph, seems like you've got a bad case of beginner's luck. Ah well, a deal’s a deal. Maybe outrunning the space mafia will give me more time to gamble later...");
         }
         else if ((targetNumber > 13 && pot < 2))
         {
             foldMove();
             announcer.announce("They fold, the pot is yours!");
+            dialogue.announce("Eh, I'm not feeling this one...");
         }
         else
         {
             raiseMove();
             announcer.announce("They raise!");
+            dialogue.announce("I'm going for it!");
         }
     }
 
