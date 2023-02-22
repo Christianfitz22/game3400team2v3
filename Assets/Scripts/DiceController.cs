@@ -235,11 +235,11 @@ public class DiceController : MonoBehaviour
     {
         if (playerTurn)
         {
-            rollAll(playerPoint, 1);
+            rollAll(playerPoint, -1);
         }
         else
         {
-            rollAll(enemyPoint, -1);
+            rollAll(enemyPoint, 1);
         }
         waitingForRoll = true;
         elapsedTime = 1.5f;
